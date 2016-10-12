@@ -87,3 +87,9 @@ ENV/
 
 # Rope project settings
 .ropeproject
+
+# Bower Componets
+bower_componets/
+
+# db Files
+*.db

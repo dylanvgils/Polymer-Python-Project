@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Index</title>
+    <script src="bower_components/webcomponentsjs/webcomponents-lite.min.js"></script>
+    <link rel="import" href="bower_components/app-router/app-router.html">
+    <style>
+      #wrapper {
+        margin: 0 auto;
+        padding: 25px 0;
+        max-width: 800px;
+      }
+
+      #menu {
+        float: left;
+        width: 240px;
+      }
+
+      #page {
+        float: right;
+        width: 550px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="wrapper">
+      <div id="menu">
+        <h1>Menu</h1>
+        <ul>
+          <li><a href="#/">Home</a></li>
+          <li><a href="#/new">Reserveren</a></li>
+          <li><a href="#/all">Alle reserveringen</a></li>
+        </ul>
+      </div>
+      <div id="page">
+        <app-router>
+          <app-route path="/" import="elements/app-landing.html"></app-route>
+          <app-route path="/new" import="elements/new-reservation.html"></app-route>
+          <app-route path="/all" import="elements/list-reservations.html"></app-route>
+        </app-router>
+      </div>
+    </div>
+  </body>
+</html>

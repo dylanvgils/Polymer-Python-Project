@@ -1,0 +1,115 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../bower_components/paper-toast/paper-toast.html">
+<link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
+
+<dom-module id="new-reservation">
+  <template>
+    <style>
+      paper-button {
+        color: #fff;
+      }
+
+      paper-button.green {
+        background-color: var(--paper-green-500);
+      }
+
+      paper-button.red {
+        background-color: var(--paper-red-500);
+      }
+
+      .yellow-button {
+        text-transform: none;
+        color: #eeff41;
+      }
+    </style>
+
+    <iron-ajax id="ajax" method="POST" url="/cgi-bin/new-reservation.py" handle-as="json" on-response="responseHandler"></iron-ajax>
+
+    <paper-toast id="toast1" duration="0" text="Reservatie is aangemaakt!">
+      <paper-button onclick="toast1.toggle()" class="yellow-button">Close now!</paper-button>
+    </paper-toast>
+
+    <paper-toast id="toast2" duration="0" text="Niet alle velden zijn ingevuld.">
+      <paper-button onclick="toast2.toggle()" class="yellow-button">Close now!</paper-button>
+    </paper-toast>
+
+    <paper-toast id="toast3" duration="0" text="Geen tafel beschikbaar op de opgegeven datum/tijd">
+      <paper-button onclick="toast3.toggle()" class="yellow-button">Close now!</paper-button>
+    </paper-toast>
+
+    <paper-toast id="toast4" duration="0" text="Datum/tijd is niet correct ingevuld.">
+      <paper-button onclick="toast4.toggle()" class="yellow-button">Close now!</paper-button>
+    </paper-toast>
+
+    <paper-toast id="toast5" duration="0" text="Het telefoonnummer is niet correct ingevuld.">
+      <paper-button onclick="toast5.toggle()" class="yellow-button">Close now!</paper-button>
+    </paper-toast>
+
+    <h1>Nieuwe reservering</h1>
+    <p>
+      <h2>1. Gegevens gezelschap</h2>
+      <paper-input id="input1" label="Reserveren op naam?" value="{{name}}"></paper-input>
+      <paper-input id="input2" label="Telefoonnummer" value="{{phone}}"></paper-input>
+    </p>
+    <p>
+      <h2>2. Vul een datum en tijd in</h2>
+      <paper-input id="input3" label="Vul een datum in (yyyy-mm-dd)" value="{{date}}"></paper-input>
+      <paper-input id="input4" label="Vul een tijd in (hh:mm)" value="{{time}}"></paper-input>
+    </p>
+    <p>
+      <h2>3. Bevestigen</h3>
+      <paper-button on-click="newReservation" class="green">Bevestigen</paper-button>
+      <paper-button on-click="cancelReservation" class="red">Annuleren</paper-button>
+    </p>
+  </template>
+
+  <script>
+    Polymer({
+      is: "new-reservation",
+      newReservation: function() {
+        this.$.ajax.contentType = "application/json";
+        this.$.ajax.body = {
+          name: this.name,
+          phone: this.phone,
+          date: this.date,
+          time: this.time
+        };
+        this.$.ajax.generateRequest();
+      },
+      cancelReservation: function() {
+        clearFields();
+      },
+      responseHandler: function(req) {
+        switch (req.detail.response.errorCode) {
+          case 0:
+            toast1.open();
+            clearFields();
+            break;
+          case 1:
+            toast2.open();
+            break;
+          case 2:
+            toast3.open();
+            break;
+          case 3:
+            toast4.open();
+            break;
+          case 4:
+            toast5.open();
+            break;
+        }
+
+        console.log("Response: " + req.detail.response.errorCode);
+      }
+    });
+
+    function clearFields() {
+      input1.value = "";
+      input2.value = "";
+      input3.value = "";
+      input4.value = "";
+    }
+  </script>
+</dom-module>

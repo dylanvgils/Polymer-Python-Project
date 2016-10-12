@@ -1,0 +1,63 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
+
+<dom-module id="list-reservations">
+  <template>
+    <style>
+      .reservations {
+        width: 100%;
+      }
+
+      .reservations table {
+        border-collapse: collapse;
+      }
+
+      .reservations th {
+        text-align: left;
+      }
+
+      .reservations td, .reservations th {
+        margin: 0;
+        padding: 5px;
+      }
+
+      .reservations tr:nth-child(odd) {
+        background-color: #e9e9e9;
+      }
+    </style>
+
+    <iron-ajax auto id="ajax" method="POST" url="/cgi-bin/get-reservations.py" handle-as="json" last-response="{{reservations}}"></iron-ajax>
+
+    <h1>Alle reserveringen</h1>
+    <table class="reservations" border="0" cellpadding="0" cellspacing="0">
+      <tr>
+        <th>#</th>
+        <th>Naam</th>
+        <th>Telefoon</th>
+        <th>Datum en Tijd</th>
+        <th>Tafel nummer</th>
+      </tr>
+      <template is="dom-repeat" items="[[reservations]]">
+        <tr>
+          <td>{{item.id}}</td>
+          <td>{{item.name}}</td>
+          <td>{{item.phone}}</td>
+          <td>{{item.dateAndTime}}</td>
+          <td>{{item.tableNr}}</td>
+        </tr>
+      </template>
+    </table>
+  </template>
+
+  <script>
+    Polymer({
+      is: "list-reservations",
+      properties: {
+        reservations: {
+          value: [],
+          notify: true
+        }
+      }
+    });
+  </script>
+</dom-module>
